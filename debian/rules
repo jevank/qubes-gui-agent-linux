@@ -4,6 +4,9 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all reproducible=+fixfilepath
+DPKG_EXPORT_BUILDFLAGS = 1
+
 include /usr/share/dpkg/default.mk
 export DESTDIR=$(shell pwd)/debian/tmp
 export LIBDIR=/usr/lib
@@ -20,7 +23,7 @@ override_dh_auto_install:
 	make install-debian
 
 override_dh_systemd_start:
-	dh_systemd_start --no-restart-on-upgrade
+	dh_systemd_start --no-restart-after-upgrade --no-restart-on-upgrade
 
 override_dh_install:
 	dh_install --fail-missing

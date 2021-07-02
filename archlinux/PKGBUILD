@@ -1,5 +1,5 @@
 pkgname=(qubes-vm-gui qubes-vm-pulseaudio)
-pkgver=`cat version`
+pkgver=$(cat version)
 pkgrel=10
 epoch=
 pkgdesc="The Qubes GUI Agent for AppVMs"
@@ -8,9 +8,9 @@ url="http://qubes-os.org/"
 license=('GPL')
 groups=()
 makedepends=(pkg-config make gcc patch git automake autoconf libtool
-			pulseaudio
+			'pulseaudio<14.3'
 			xorg-server-devel xorg-util-macros libxcomposite libxt pixman
-			qubes-vm-gui-common qubes-libvchan-xen qubes-db-vm
+			qubes-vm-gui-common qubes-libvchan qubes-db-vm
 			)
 checkdepends=()
 optdepends=()
@@ -25,15 +25,15 @@ source=(PKGBUILD-z-qubes-session.sh)
 
 noextract=()
 md5sums=() #generate with 'makepkg -g'
-pa_ver=`(pkg-config --modversion libpulse 2>/dev/null || echo 0.0) | cut -f 1 -d "-"`
+pa_ver=$((pkg-config --modversion libpulse 2>/dev/null || echo 0.0) | cut -f 1 -d "-")
 
 build() {
 
-for source in Makefile appvm-scripts gui-common include pulse gui-agent common xf86-input-mfndev xf86-video-dummy window-icon-updater ; do
+for source in Makefile appvm-scripts gui-common include pulse gui-agent common xf86-input-mfndev xf86-video-dummy xf86-qubes-common window-icon-updater version; do
   (ln -s $srcdir/../$source $srcdir/$source)
 done
 
-pa_ver=`(pkg-config --modversion libpulse 2>/dev/null || echo 0.0) | cut -f 1 -d "-"`
+pa_ver=$((pkg-config --modversion libpulse 2>/dev/null || echo 0.0) | cut -f 1 -d "-")
 
 rm -f pulse/pulsecore
 ln -s pulsecore-$pa_ver pulse/pulsecore
@@ -50,7 +50,12 @@ make appvm
 
 package_qubes-vm-gui() {
 
-depends=('xorg-xinit' 'libxcomposite' 'zenity' 'qubes-libvchan-xen' 'python-xcffib' 'xorg-server>=1.20' 'xorg-server<1.21')
+depends=('xorg-xinit' 'libxcomposite' 'zenity' 'qubes-libvchan' 'python-xcffib'
+			# Xorg dependencies are on specific ABI versions: https://www.x.org/wiki/XorgModuleABIVersions/
+			# These can also be verified with pacman -Qi xorg-server (Provides)
+			# There is however a discrepency if verifying via pkg-config --variable abi_videodrv xorg-server
+			'X-ABI-VIDEODRV_VERSION=24.0' 'X-ABI-XINPUT_VERSION=24.1' 'X-ABI-EXTENSION_VERSION=10.0'
+			)
 install=PKGBUILD.install
 
 make install-rh-agent DESTDIR=$pkgdir LIBDIR=/usr/lib USRLIBDIR=/usr/lib SYSLIBDIR=/usr/lib
@@ -66,9 +71,9 @@ install -D $srcdir/PKGBUILD-z-qubes-session.sh $pkgdir/etc/X11/xinit/xinitrc.d/z
 package_qubes-vm-pulseaudio() {
 
 pkgdesc="Pulseaudio support for Qubes VM"
-depends=( 'alsa-lib' 'alsa-utils' 'pulseaudio-alsa' 'pulseaudio<14.0')
+depends=('alsa-lib' 'alsa-utils' 'pulseaudio-alsa' 'pulseaudio<14.3')
 install=PKGBUILD-pulseaudio.install
-pa_ver=`(pkg-config --modversion libpulse 2>/dev/null || echo 0.0) | cut -f 1 -d "-"`
+pa_ver=$((pkg-config --modversion libpulse 2>/dev/null || echo 0.0) | cut -f 1 -d "-")
 
 make install-pulseaudio DESTDIR=$pkgdir PA_VER=$pa_ver LIBDIR=/usr/lib USRLIBDIR=/usr/lib SYSLIBDIR=/usr/lib
 

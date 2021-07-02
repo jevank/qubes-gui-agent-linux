@@ -1,3 +1,187 @@
+qubes-gui-agent (4.1.19-1) unstable; urgency=medium
+
+  [ Frédéric Pierret (fepitre) ]
+  * Implement VNC GuiVM
+  * guivm-vnc: use /run directly in lightdm preset conf
+  * guivm-vnc: simplify options set
+  * guivm-vnc: add few comments for pre script
+  * Use only one script for pre and post
+  * spec: remove xorg-x11-utils and replace by dependencies
+
+ -- Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>  Thu, 01 Jul 2021 05:45:06 +0200
+
+qubes-gui-agent (4.1.18-1) unstable; urgency=medium
+
+  [ Frédéric Pierret (fepitre) ]
+  * spec: ensure R for few x11 tools
+
+ -- Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>  Sat, 12 Jun 2021 17:57:09 +0200
+
+qubes-gui-agent (4.1.17-1) unstable; urgency=medium
+
+  [ Rusty Bird ]
+  * vmside: make strncat() length more obvious
+
+  [ Frédéric Pierret (fepitre) ]
+  * get-latest-pulsecore: default value for latest Fedora release
+
+ -- Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>  Mon, 05 Apr 2021 16:38:49 +0200
+
+qubes-gui-agent (4.1.16-1) unstable; urgency=medium
+
+  [ Marek Marczykowski-Górecki ]
+  * debian: prevent restart on update
+  * Add pulseaudio-14.1 headers
+  * Add pulseaudio 14.2 headers
+
+  [ unman ]
+  * Fix pulseaudio in Ubuntu templates
+
+ -- Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>  Sat, 13 Feb 2021 12:30:55 +0100
+
+qubes-gui-agent (4.1.15-1) unstable; urgency=medium
+
+  [ Frédéric Pierret (fepitre) ]
+  * debian: update control
+  * debian: update compat
+
+  [ Benjamin Moody ]
+  * vmside: Rename wm_state to net_wm_state.
+  * vmside: Implement the WM_STATE property.
+
+  [ Demi Marie Obenour ]
+  * Remove unnecessary XInternAtom
+  * Move XInternAtom calls to startup
+  * Log when an unmanaged window is skipped
+  * Add Vim modeline
+  * Delete commented-out code
+  * Use actual X11 timestamps
+  * Only set focus on windows that want it
+  * Tell Java we are a non-reparenting window manager
+  * Remove references to /tmp/qubes-session-{env,waiter}
+  * Remove unneded time parameters
+  * Avoid passing NULL as an X11 string
+
+  [ Marek Marczykowski-Górecki ]
+  * Start gui-agent only after systemd let in normal users
+
+  [ Demi Marie Obenour ]
+  * Mass replace: ‘/var/run’ → ‘/run’
+
+ -- Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>  Tue, 05 Jan 2021 22:23:18 +0100
+
+qubes-gui-agent (4.1.14-1) unstable; urgency=medium
+
+  [ icequbes1 ]
+  * Link pulsecore 13.99.3 headers to 13.99.2
+
+  [ Marek Marczykowski-Górecki ]
+  * xf86-video-dummy: improve error message on xengntshr_open fail
+
+  [ Frédéric Pierret (fepitre) ]
+  * Add .gitlab-ci.yml
+
+  [ Marek Marczykowski-Górecki ]
+  * gitlab-ci: exclude qubes-gui-agent when installing in dom0
+
+  [ Demi Marie Obenour ]
+  * Fix Unicode handling in Qubes clipboard
+  * Make variables static and add extern declaration
+
+  [ Frédéric Pierret (fepitre) ]
+  * Set default BACKEND_VMM value to xen
+  * Use pkg-config to get BACKEND_VMM
+
+  [ Demi Marie Obenour ]
+  * Fix indentation and segfault
+
+  [ icequbes1 ]
+  * [ubuntu] Perform quilt refresh for ubuntu-only patch
+
+  [ Frédéric Pierret (fepitre) ]
+  * Add script for getting latest pulsecore headers
+  * Add pulseaudio-14.0 headers
+  * Few improvements from Marek's suggestions
+  * Allow to override defined CFLAGS
+  * Refactor main Makefile
+
+ -- Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>  Thu, 03 Dec 2020 15:17:10 +0100
+
+qubes-gui-agent (4.1.13-1) unstable; urgency=medium
+
+  [ unman ]
+  * pulseaudio 13.99.2: add internal headers
+  * pulseaudio 13.99.2
+
+  [ Frédéric Pierret (fepitre) ]
+  * Fix archlinux packaging
+
+ -- Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>  Thu, 29 Oct 2020 22:06:24 +0100
+
+qubes-gui-agent (4.1.12-1) unstable; urgency=medium
+
+  [ Matt McCutchen ]
+  * module-vchan-sink: link up the card properly
+
+  [ Frédéric Pierret (fepitre) ]
+  * pulseaudio: allow bluetooth devices like headphones
+
+ -- Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>  Sat, 10 Oct 2020 04:20:24 +0200
+
+qubes-gui-agent (4.1.11-1) unstable; urgency=medium
+
+  [ Paweł Marczewski ]
+  * Extract Xephyr to a separate script
+
+  [ Marek Marczykowski-Górecki ]
+  * guivm: clean qrexec-service related environment in GUI session
+
+ -- Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>  Thu, 06 Aug 2020 05:34:20 +0200
+
+qubes-gui-agent (4.1.10-1) unstable; urgency=medium
+
+  [ Marta Marczykowska-Górecka ]
+  * Modified keyboard layout handling
+
+ -- Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>  Thu, 16 Jul 2020 06:12:58 +0200
+
+qubes-gui-agent (4.1.9-1) unstable; urgency=medium
+
+  [ Dmitry Fedorov ]
+  * conditionally use qubesdb dependency in vchan-sink module
+
+  [ Olivier MEDOC ]
+  * archlinux: set dependencies on xorg server ABI version instead of
+    the server version itself
+
+  [ Artur Puzio ]
+  * Disable gui-agent on sys-gui-gpu
+
+  [ deathgrippin ]
+  * Condense conditional
+
+  [ Rusty Bird ]
+  * vmside: use XKillClient() if WM_DELETE_WINDOW is unsupported
+
+  [ Frédéric Pierret (fepitre) ]
+  * qubes-run-xephyr: debian has another path for shmoverride.so
+  * Makefile: add clean of pkgs and debian changelog.*
+  * debian: add xfce subpackage for VM
+  * Check if shmoverride.so exists directly
+  * debian: fix conflict with newer location of pulseaudio conf
+
+ -- Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>  Mon, 29 Jun 2020 05:31:38 +0200
+
+qubes-gui-agent (4.1.8-1) unstable; urgency=medium
+
+  [ Marek Marczykowski-Górecki ]
+  * pulse: fix pa_proplist_set[fs] usage
+
+  [ Ivan Kardykov ]
+  * fix typo
+
+ -- Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>  Thu, 21 May 2020 02:51:19 +0200
+
 qubes-gui-agent (4.1.7-1) unstable; urgency=medium
 
   [ Paweł Marczewski ]

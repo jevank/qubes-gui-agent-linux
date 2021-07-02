@@ -46,10 +46,10 @@ BuildRequires:	libXdamage-devel
 BuildRequires:	libXfixes-devel
 BuildRequires:	libXt-devel
 BuildRequires:	libtool-ltdl-devel
-BuildRequires:	pulseaudio-libs-devel >= 0.9.21, pulseaudio-libs-devel <= 13.99.1
+BuildRequires:	pulseaudio-libs-devel >= 0.9.21, pulseaudio-libs-devel <= 14.2
 BuildRequires:	xorg-x11-server-devel
 BuildRequires:	pam-devel
-BuildRequires:	qubes-libvchan-@BACKEND_VMM@-devel
+BuildRequires:	qubes-libvchan-devel
 BuildRequires:	qubes-gui-common-devel >= 4.1.0
 BuildRequires:	qubes-db-devel
 BuildRequires:	xen-devel
@@ -58,13 +58,20 @@ Requires:	Xorg %(xserver-sdk-abi-requires videodrv)
 Requires:	libXfixes
 Requires:	qubes-core-vm >= 3.0.14
 Requires:	xorg-x11-xinit
-Requires:	qubes-libvchan-@BACKEND_VMM@
+Requires:	qubes-libvchan
 # qubesdb-read --wait option
 Requires:	qubes-db >= 4.1.4
 Requires:	python%{python3_pkgversion}-xcffib
-Requires:   xorg-x11-utils
 Requires:   xorg-x11-server-Xorg
 Requires:   xorg-x11-server-Xephyr
+Requires:   setxkbmap
+Requires:   xsetroot
+Requires:   xrdb
+Requires:   xmodmap
+Requires:   xev
+Requires:   xdpyinfo
+Requires:   xprop
+
 Provides:   qubes-gui-vm = %{version}-%{release}
 Obsoletes:  qubes-gui-vm < 4.0.0
 
@@ -89,6 +96,13 @@ Summary: XFCE desktop support for Qubes VM
 %description xfce
 XFCE desktop support for Qubes VM
 
+%package -n qubes-gui-vnc
+Summary: Remote GuiVM support using VNC
+Requires: x11vnc
+
+%description -n qubes-gui-vnc
+Remote GuiVM support using VNC
+
 %description
 The Qubes GUI agent that needs to be installed in VM in order to provide the
 Qubes fancy GUI.
@@ -102,11 +116,11 @@ ln -s pulsecore-%{pa_ver_full} pulse/pulsecore
 %build
 %{?set_build_flags}
 #make clean
-make BACKEND_VMM=@BACKEND_VMM@ appvm
+make appvm
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make install install-xfce DESTDIR=$RPM_BUILD_ROOT \
+make install DESTDIR=$RPM_BUILD_ROOT \
                      LIBDIR=%{_libdir} \
                      DATADIR=%{_datadir} \
                      PA_VER_FULL=%{pa_ver_full}
@@ -152,6 +166,7 @@ rm -f %{name}-%{version}
 /usr/bin/qubes-session
 /usr/bin/qubes-run-xorg
 /usr/bin/qubes-run-xephyr
+/usr/bin/qubes-start-xephyr
 /usr/bin/qubes-change-keyboard-layout
 /usr/bin/qubes-set-monitor-layout
 %{_libdir}/xorg/modules/drivers/qubes_drv.so
@@ -160,26 +175,26 @@ rm -f %{name}-%{version}
 %attr(0644,root,root) /etc/X11/xorg-qubes.conf.template
 /etc/profile.d/qubes-gui.sh
 /etc/profile.d/qubes-gui.csh
-/etc/profile.d/qubes-session.sh
 %config /etc/pam.d/qubes-gui-agent
 %config /etc/security/limits.d/90-qubes-gui.conf
 %config /etc/xdg/Trolltech.conf
-/etc/X11/xinit/xinitrc.d/qubes-keymap.sh
 /etc/X11/xinit/xinitrc.d/20qt-x11-no-mitshm.sh
 /etc/X11/xinit/xinitrc.d/20qt-gnome-desktop-session-id.sh
-/etc/X11/xinit/xinitrc.d/50-guivm-windows-prefix.sh
+/etc/X11/xinit/xinitrc.d/50guivm-windows-prefix.sh
 /etc/qubes-rpc/qubes.SetMonitorLayout
+/etc/qubes-rpc/qubes.GuiVMSession
 /etc/qubes/post-install.d/20-qubes-guivm-gui-agent.sh
 %config /etc/sysconfig/desktop
 /lib/systemd/system/qubes-gui-agent.service
 /lib/udev/rules.d/70-master-of-seat.rules
-/usr/lib/tmpfiles.d/qubes-session.conf
 /usr/lib/sysctl.d/30-qubes-gui-agent.conf
 /usr/lib/qubes/qubes-gui-agent-pre.sh
+/usr/lib/qubes/qubes-keymap.sh
 %{_datadir}/glib-2.0/schemas/20_qubes-gui-vm.gschema.override
 /usr/lib/qubes/icon-sender
 /etc/xdg/autostart/qubes-icon-sender.desktop
 /etc/xdg/autostart/qubes-qrexec-fork-server.desktop
+/etc/xdg/autostart/qubes-keymap.desktop
 %dir /var/log/qubes
 
 %files -n pulseaudio-qubes
@@ -190,7 +205,13 @@ rm -f %{name}-%{version}
 /etc/xdg/autostart/qubes-pulseaudio.desktop
 
 %files xfce
-/etc/X11/xinit/xinitrc.d/50-xfce-desktop.sh
+/etc/X11/xinit/xinitrc.d/60xfce-desktop.sh
+
+%files -n qubes-gui-vnc
+#/lib/systemd/system/qubes-gui-vncserver.service
+%attr(0644,root,root) /etc/X11/xorg-qubes-x11vnc.conf.template
+%attr(0644,root,root) /etc/systemd/system/lightdm.service.d/qubes-guivm-vnc.conf
+/usr/bin/qubes-run-x11vnc
 
 %changelog
 @CHANGELOG@

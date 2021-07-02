@@ -1,6 +1,7 @@
 [Unit]
 Description=Qubes GUI Agent
-After=qubes-meminfo-writer.service qubes-mount-dirs.service
+After=systemd-user-sessions.service
+ConditionPathExists=!/run/qubes-service/lightdm
 
 [Service]
 StandardInput=tty
@@ -11,10 +12,9 @@ TTYPath=/dev/tty7
 ExecStartPre=/bin/sh -c /usr/lib/qubes/qubes-gui-agent-pre.sh
 ExecStart=/usr/bin/qubes-gui $GUI_OPTS
 # clean env
-ExecStopPost=/bin/rm -f /tmp/qubes-session-env /tmp/qubes-session-waiter
 StandardOutput=syslog
 Environment=DISPLAY=:0
-EnvironmentFile=-/var/run/qubes-service-environment
+EnvironmentFile=-/run/qubes-service-environment
 
 [Install]
 WantedBy=multi-user.target

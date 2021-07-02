@@ -3,13 +3,14 @@ Section: admin
 Priority: extra
 Maintainer: Davíð Steinn Geirsson <david@dsg.is>
 Build-Depends:
+    debhelper,
     libpam0g-dev,
     libpulse-dev,
     libtool,
     automake,
     xserver-xorg-dev,
     xutils-dev,
-    libvchan-xen-dev,
+    libvchan-dev,
     libx11-dev,
     libxcomposite-dev,
     libxdamage-dev,
@@ -19,12 +20,10 @@ Build-Depends:
     libxen-dev,
     lsb-release,
     quilt,
-    debhelper (>= 8.0.0),
     qubes-gui-common (>= 4.1.0),
     qubesdb-dev,
-    dh-systemd (>= 1.5),
     libltdl-dev
-Standards-Version: 3.9.8
+Standards-Version: 4.4.0.1
 Homepage: http://www.qubes-os.org/
 #Vcs-Git: git://git.debian.org/collab-maint/qubes-gui-agent.git
 #Vcs-Browser: http://git.debian.org/?p=collab-maint/qubes-gui-agent.git;a=summary
@@ -100,7 +99,24 @@ Depends:
     ${shlibs:Depends},
     ${pulse:Depends},
     ${misc:Depends}
-Replaces: qubes-gui-agent (<< 4.0.0-1)
-Breaks: qubes-gui-agent (<< 4.0.0-1)
+Replaces: qubes-gui-agent (<< 4.1.9-1)
+Breaks: qubes-gui-agent (<< 4.1.9-1)
 Description: Audio support for Qubes VM
  Pulseaudio module to enable sound support in Qubes VM
+
+Package: qubes-gui-agent-xfce
+Architecture: any
+Depends:
+    ${shlibs:Depends},
+    ${misc:Depends}
+Description: XFCE desktop support for Qubes VM
+ XFCE desktop support for Qubes VM
+
+Package: qubes-gui-vnc
+Architecture: any
+Depends:
+    x11vnc
+    ${shlibs:Depends},
+    ${misc:Depends}
+Description: Remote GuiVM support using VNC
+ Remote GuiVM support using VNC

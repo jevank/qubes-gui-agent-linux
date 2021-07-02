@@ -1,0 +1,34 @@
+#!/bin/sh
+
+if [ $(whoami) == "root" ]; then
+    echo "Should be run as normal user!"
+    exit 1
+fi
+
+# do not let child processes believe they are running as qrexec service
+# directly
+unset QREXEC_REMOTE_DOMAIN
+unset QREXEC_SERVICE_FULL_NAME
+unset QREXEC_SERVICE_ARGUMENT
+unset QREXEC_REQUESTED_TARGET
+unset QREXEC_REQUESTED_TARGET_TYPE
+unset QREXEC_AGENT_PID
+
+DISPLAY_XORG=:1
+DISPLAY_XEPHYR=:0
+
+XSESSION="/etc/X11/xinit/xinitrc"
+if [ -f /etc/X11/Xsession ]; then
+    # Debian-based distro, set Xsession appropriately
+    XSESSION="/etc/X11/Xsession qubes-session"
+fi
+
+# Wait for Xorg display (started by qubes-run-xorg)
+if ! timeout 30s sh -c "while ! xdpyinfo -display $DISPLAY_XORG > /dev/null 2>&1; do sleep 1; done"; then
+    echo "Timed out waiting for Xorg display $DISPLAY_XORG"
+    exit 1
+fi
+
+# Run xsession into Xephyr
+export DISPLAY=$DISPLAY_XORG
+exec /usr/bin/xinit $XSESSION -- /usr/bin/qubes-run-xephyr $DISPLAY_XEPHYR > ~/.xsession-errors 2>&1
